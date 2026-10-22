@@ -1,1 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080e1d">
+<title>ProfitNest | Rewards Portal</title>
+<style>
+:root{--bg:#080e1d;--panel:#111c32;--line:#2b3b59;--blue:#6485ff;--cyan:#42d9e8;--white:#f4f7ff;--muted:#9aabc8;--green:#35d39a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--white);font-family:Arial,sans-serif}
+button,input{font:inherit}
+button{cursor:pointer}
+header{position:sticky;top:0;z-index:10;background:#0b1428;border-bottom:1px solid var(--line);padding:15px}
+.topbar{max-width:960px;margin:auto;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:25px;font-weight:900}.logo span{color:var(--cyan)}
+.pill{border:1px solid #286d5d;color:var(--green);padding:7px 10px;border-radius:20px;font-size:11px}
+main{max-width:960px;margin:auto;padding:16px 13px 100px}
+.hero{padding:23px 19px;border:1px solid #38568a;border-radius:20px;background:linear-gradient(130deg,#1a3671,#182749 60%,#123b4b)}
+.hero h1{font-size:30px;margin:10px 0}.hero p{font-size:13px;line-height:1.7;color:#d3def5}
+.section{margin-top:24px;scroll-margin-top:82px}
+.heading{font-size:22px;font-weight:900;margin:0 0 13px}
+.muted{color:var(--muted)}.small{font-size:12px;line-height:1.65}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.stat,.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px;min-width:0}
+.stat-label{font-size:12px;color:var(--muted)}
+.stat-value{font-size:22px;font-weight:900;margin-top:8px;overflow-wrap:anywhere}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.plan{background:linear-gradient(160deg,#172746,#101a2f);border-color:#33466b}
+.tag{display:inline-block;background:#263e69;color:#dce8ff;border-radius:20px;padding:5px 9px;font-size:10px;font-weight:bold;margin-bottom:9px}
+.plan-name{display:block;font-size:23px;line-height:1.2;font-weight:900;margin:4px 0 13px}
+.plan-price{font-size:25px;font-weight:900;color:var(--cyan);margin:5px 0}
+.profit{display:flex;justify-content:space-between;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid var(--line);font-size:12px}
+.profit strong{color:var(--green);text-align:right}
+.btn{border:0;border-radius:11px;padding:12px 15px;background:linear-gradient(100deg,var(--blue),#4775f5);color:white;font-weight:800}
+.btn.full{width:100%;margin-top:10px}
+.btn.secondary{background:#1b2b47;border:1px solid var(--line)}
+.field{margin-top:13px}
+.field label{display:block;font-size:13px;font-weight:bold;margin-bottom:7px}
+.field input{width:100%;padding:13px;border-radius:10px;border:1px solid var(--line);background:#091326;color:white;outline:none}
+.field input:focus{border-color:var(--cyan)}
+.notice{background:#172641;border:1px solid #314969;border-radius:12px;padding:12px;font-size:12px;line-height:1.65;color:#d6e3fa;margin-top:12px}
+.number{font-size:23px;font-weight:900;color:var(--cyan);overflow-wrap:anywhere;margin:8px 0}
+.task{margin-bottom:11px}
+.task-title{font-size:17px;font-weight:900;margin:4px 0 8px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.reward{font-weight:900;color:var(--green);white-space:nowrap}
+.hidden{display:none!important}
+.message{font-size:13px;line-height:1.6;margin-top:10px;overflow-wrap:anywhere}
+.bottom{position:fixed;z-index:20;bottom:0;left:0;right:0;background:#0b1428;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:9px 3px calc(9px + env(safe-area-inset-bottom))}
+.bottom button{background:none;border:0;color:#c2cde2;font-size:11px;padding:4px}
+.bottom button span{display:block;font-size:19px;margin-bottom:3px}
+hr{border:0;border-top:1px solid var(--line);margin:16px 0}
+@media(min-width:650px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.hero h1{font-size:36px}}
+@media(max-width:350px){.cards{grid-template-columns:1fr}.plan-name{font-size:25px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="topbar">
+  <div class="logo">Profit<span>Nest</span></div>
+  <div class="pill">● Rewards Portal</div>
+ </div>
+</header>
 
+<main>
+<section class="hero">
+ <small>WELCOME TO PROFITNEST</small>
+ <h1>Rewards. Tasks. Progress.</h1>
+ <p>Explore plans, view proposed earnings, complete tasks and share your referral link.</p>
+ <button class="btn" onclick="go('plans')">Explore Plans →</button>
+</section>
+
+<section class="section" id="dashboard">
+ <h2 class="heading">My Dashboard</h2>
+ <div class="stats">
+  <div class="stat"><div class="stat-label">Available Balance</div><div class="stat-value" id="balance">Rs 0</div></div>
+  <div class="stat"><div class="stat-label">My Plan</div><div class="stat-value" id="myPlan" style="font-size:17px">Not selected</div></div>
+  <div class="stat"><div class="stat-label">Today's Verified Earnings</div><div class="stat-value">Rs 0</div></div>
+  <div class="stat"><div class="stat-label">Monthly Verified Earnings</div><div class="stat-value">Rs 0</div></div>
+ </div>
+ <p class="muted small">Dashboard balances show verified earnings only. Plan estimates below are not guaranteed returns.</p>
+</section>
+
+<section class="section" id="plans">
+ <h2 class="heading">💎 Select Your Plan</h2>
+ <p class="muted small">Tap a plan to open its deposit details.</p>
+ <div class="cards" id="planCards"></div>
+ <div class="notice">Daily and monthly figures are proposed estimates supplied for display, not promised or guaranteed profits. Confirm the business model, terms and refund policy before paying.</div>
+</section>
+
+<section class="section hidden" id="deposit">
+ <h2 class="heading">💳 Deposit Payment</h2>
+ <div class="card">
+  <div class="muted small">Selected Plan</div>
+  <div id="selectedPlan" class="plan-name" style="margin-top:8px"></div>
+  <div class="muted small">Deposit Amount</div>
+  <div class="plan-price" id="selectedAmount"></div>
+  <div class="profit"><span>Proposed daily profit</span><strong id="selectedDaily"></strong></div>
+  <div class="profit"><span>Proposed monthly profit</span><strong id="selectedMonthly"></strong></div>
+  <p class="muted small">Estimates only; actual profit is not guaranteed.</p>
+  <hr>
+  <div class="muted small">EasyPaisa Recipient Name</div>
+  <div style="font-size:19px;font-weight:900;margin-top:5px">Hira</div>
+  <div class="muted small" style="margin-top:13px">EasyPaisa Number</div>
+  <div class="number" id="payNumber">03715828536</div>
+  <button class="btn secondary full" onclick="copyNumber()">Copy EasyPaisa Number</button>
+  <div class="notice">Verify the recipient's identity and payment terms independently before sending money.</div>
+  <div class="field"><label for="payerName">Your Name</label><input id="payerName" placeholder="Enter your name" autocomplete="name"></div>
+  <div class="field"><label for="payerPhone">Your Mobile Number</label><input id="payerPhone" inputmode="tel" placeholder="03XXXXXXXXX"></div>
+  <div class="field"><label for="transactionId">Transaction ID / TID</label><input id="transactionId" placeholder="Enter transaction reference"></div>
+  <button class="btn full" onclick="submitPayment()">Submit Payment Details</button>
+  <p id="paymentMsg" class="message" aria-live="polite"></p>
+  <p class="muted small">Submission here does not verify a payment. A secure backend must validate and store requests.</p>
+ </div>
+</section>
+
+<section class="section" id="tasks">
+ <h2 class="heading">📋 Available Tasks</h2>
+ <div class="card task">
+  <div class="row"><div class="task-title">WhatsApp Channel</div><div class="reward">Rs 100*</div></div>
+  <p class="muted small">Open the channel and follow its instructions.</p>
+  <a href="https://whatsapp.com/channel/0029VbEBZyP3LdQLeRcx9x00" target="_blank" rel="noopener noreferrer" style="text-decoration:none">
+   <button class="btn full">Open WhatsApp Channel ↗</button>
+  </a>
+  <button class="btn secondary full" onclick="taskNotice()">Request Task Verification</button>
+  <p class="message muted" id="taskMsg"></p>
+ </div>
+ <p class="muted small">*Proposed task reward; only verified rewards can be credited after backend setup.</p>
+</section>
+
+<section class="section" id="refer">
+ <h2 class="heading">👥 Refer & Share</h2>
+ <div class="card">
+  <div class="task-title">Your Website Link</div>
+  <p class="muted small">Publish your website online so other people can open this link.</p>
+  <div class="field"><input id="refLink" readonly></div>
+  <button class="btn full" onclick="copyLink()">Copy Referral Link</button>
+  <button class="btn secondary full" onclick="shareLink()">Share Website</button>
+  <hr>
+  <div class="row"><span class="muted small">Proposed referral reward</span><strong class="reward">Rs 300*</strong></div>
+  <p class="muted small">Referral rewards require clear terms and server-side verification.</p>
+  <p id="refMsg" class="message"></p>
+ </div>
+</section>
+
+<section class="section" id="withdraw">
+ <h2 class="heading">🏦 Withdraw</h2>
+ <div class="card">
+  <div class="row"><span class="muted">Minimum withdrawal</span><strong>Rs 1,000</strong></div>
+  <div class="row" style="margin-top:12px"><span class="muted">Available balance</span><strong id="withdrawBalance">Rs 0</strong></div>
+  <div class="field"><label for="withdrawAccount">Your EasyPaisa Account Number</label><input id="withdrawAccount" inputmode="tel" placeholder="03XXXXXXXXX"></div>
+  <div class="field"><label for="withdrawName">Account Holder Name</label><input id="withdrawName" placeholder="Enter account holder name"></div>
+  <button class="btn full" onclick="requestWithdraw()">Submit Withdrawal Request</button>
+  <p id="withdrawMsg" class="message" aria-live="polite"></p>
+  <p class="muted small">Withdrawal processing requires a secure backend and verified available balance. Recruiting other members should not be a condition for releasing earned funds.</p>
+ </div>
+</section>
+</main>
+
+<nav class="bottom">
+ <button onclick="go('dashboard')"><span>⌂</span>Home</button>
+ <button onclick="go('plans')"><span>💎</span>Plans</button>
+ <button onclick="go('tasks')"><span>✓</span>Tasks</button>
+ <button onclick="go('refer')"><span>👥</span>Refer</button>
+ <button onclick="go('withdraw')"><span>⇧</span>Withdraw</button>
+</nav>
+
+<script>
+const plans=[
+ {name:"Starter Plan",amount:300,daily:100},
+ {name:"Basic Plan",amount:400,daily:150},
+ {name:"Silver Plan",amount:500,daily:200},
+ {name:"Gold Plan",amount:700,daily:250},
+ {name:"Platinum Plan",amount:1000,daily:300},
+ {name:"Diamond Plan",amount:1500,daily:400},
+ {name:"Premium Plan",amount:3000,daily:5000}
+];
+
+let chosenPlan=null;
+const money=n=>"Rs "+Number(n).toLocaleString("en-PK");
+function renderPlans(){
+ document.getElementById("planCards").innerHTML=plans.map((p,i)=>{
+  const monthly=p.daily*30;
+  return `<div class="card plan">
+   <span class="tag">PLAN ${String(i+1).padStart(2,"0")}</span>
+   <strong class="plan-name">${p.name}</strong>
+   <div class="muted small">Deposit amount</div>
+   <div class="plan-price">${money(p.amount)}</div>
+   <div class="profit"><span>Proposed daily profit</span><strong>${money(p.daily)}</strong></div>
+   <div class="profit"><span>Proposed monthly profit</span><strong>${money(monthly)}</strong></div>
+   <p class="muted small">Estimates only; not guaranteed.</p>
+   <button class="btn full" onclick="selectPlan(${i})">Select Plan</button>
+  </div>`;
+ }).join("");
+}
+function go(id){
+ const target=document.getElementById(id);
+ if(!target)return;
+ target.classList.remove("hidden");
+ target.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function selectPlan(index){
+ chosenPlan=plans[index];
+ document.getElementById("selectedPlan").textContent=chosenPlan.name;
+ document.getElementById("selectedAmount").textContent=money(chosenPlan.amount);
+ document.getElementById("selectedDaily").textContent=money(chosenPlan.daily);
+ document.getElementById("selectedMonthly").textContent=money(chosenPlan.daily*30);
+ document.getElementById("myPlan").textContent=chosenPlan.name;
+ document.getElementById("paymentMsg").textContent="";
+ document.getElementById("deposit").classList.remove("hidden");
+ document.getElementById("deposit").scrollIntoView({behavior:"smooth",block:"start"});
+}
+async function copyText(value){
+ try{await navigator.clipboard.writeText(value);return true}
+ catch(e){
+  const el=document.createElement("textarea");
+  el.value=value;el.style.position="fixed";el.style.opacity="0";
+  document.body.appendChild(el);el.select();
+  let ok=false;try{ok=document.execCommand("copy")}catch(err){}
+  el.remove();return ok;
+ }
+}
+async function copyNumber(){
+ const ok=await copyText("03715828536");
+ alert(ok?"Number copied. Verify the recipient before paying.":"Copy manually: 03715828536");
+}
+function submitPayment(){
+ const msg=document.getElementById("paymentMsg");
+ if(!chosenPlan){msg.textContent="Select a plan first.";return}
+ const name=document.getElementById("payerName").value.trim();
+ const phone=document.getElementById("payerPhone").value.trim();
+ const tid=document.getElementById("transactionId").value.trim();
+ if(!name||!phone||!tid){msg.textContent="Enter your name, mobile number and transaction ID.";return}
+ msg.textContent="Details entered. No payment has been verified or stored. Connect a secure backend to submit this request for review.";
+}
+function taskNotice(){
+ document.getElementById("taskMsg").textContent="Task verification is not connected. Opening the channel does not automatically credit a reward.";
+}
+function getWebsiteLink(){return window.location.href.split("#")[0]}
+document.getElementById("refLink").value=getWebsiteLink();
+async function copyLink(){
+ const link=getWebsiteLink();
+ document.getElementById("refLink").value=link;
+ const ok=await copyText(link);
+ document.getElementById("refMsg").textContent=ok?"Link copied. Publish the website so others can access it.":"Copy the link manually and publish the website first.";
+}
+async function shareLink(){
+ const url=getWebsiteLink();
+ if(navigator.share){
+  try{await navigator.share({title:"ProfitNest",text:"Visit ProfitNest",url})}catch(e){}
+ }else{await copyLink()}
+}
+function requestWithdraw(){
+ const account=document.getElementById("withdrawAccount").value.trim();
+ const name=document.getElementById("withdrawName").value.trim();
+ const msg=document.getElementById("withdrawMsg");
+ if(!account||!name){msg.textContent="Enter your account number and account holder name.";return}
+ msg.textContent="No withdrawal was submitted: verified balance and backend processing are not connected.";
+}
+renderPlans();
+</script>
+</body>
+</html>
